@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/ext-all.css"/>
+    <script type="text/javascript" src="../../adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../ext-all.js"></script>
+    <script type="text/javascript">
+        Ext.onReady(function () {
+            var answerone = [
+                {
+                    xtype: 'radio',
+                    boxLabel: '湿垃圾',
+                    name: 'one',
+                    inputValue: '湿垃圾',
+                },
+                {
+                    xtype: 'radio',
+                    boxLabel: '干垃圾',
+                    name: 'one',
+                    inputValue: '干垃圾',
+                },
+                {
+                    xtype: 'radio',
+                    boxLabel: '有害垃圾',
+                    name: 'one',
+                    inputValue: '有害垃圾'
+                },
+                {
+                    xtype: 'radio',
+                    boxLabel: '可回收物',
+                    name: 'one',
+                    inputValue: '可回收物'
+                }
+            ];
+            var answertwo = [
+                {
+                    xtype: 'checkbox',
+                    boxLabel: '把粑粑用废纸包好带回家冲掉',
+                    name: 'two',
+                    inputValue:'把粑粑用废纸包好带回家冲掉'
+                },
+                {
+                    xtype: 'checkbox',
+                    boxLabel: '受污染的报纸按照有害垃圾处理',
+                    name: 'two',
+                    inputValue:'受污染的报纸按照有害垃圾处理'
+                },
+                {
+                    xtype: 'checkbox',
+                    boxLabel: '没受到污染的报纸按照可回收垃圾处理',
+                    name: 'two',
+                    inputValue:'没受到污染的报纸按照可回收垃圾处理',
+                },
+                {
+                    xtype: 'checkbox',
+                    boxLabel: '受污染后的报纸浸水后当做湿垃圾处理',
+                    name: 'two',
+                    inputValue:'受污染后的报纸浸水后当做湿垃圾处理',
+                }
+            ];
+            var navHandler = function (direction) {
+                var wizard = Ext.getCmp('wizard').layout;
+                var prev = Ext.getCmp('move-prev');
+                var next = Ext.getCmp('move-next');
+                var activeId = wizard.activeItem.id;
+
+                if (activeId == 'card-0') {
+                    if (direction == 1) {
+                        wizard.setActiveItem(1);
+                        prev.setDisabled(false);
+                    }
+                } else if (activeId == 'card-1') {
+                    if (direction == -1) {
+                        next.setText("下一题");
+                        wizard.setActiveItem(0);
+                        prev.setDisabled(true);
+                    } else {
+                        next.setText("submit");
+                        wizard.setActiveItem(2);
+                        var oneResult = panel.getForm().items.items.filter(item=>item.checked).filter(item=>item.name==="one");
+                        var twoResult = panel.getForm().items.items.filter(item=>item.checked).filter(item=>item.name==="two");
+                        let str = " "
+                        twoResult.forEach(i=>{
+                            str+=i.boxLabel+" "
+                        });
+                        //answerone[]
+                        Ext.getCmp('answer1').update(oneResult[0].boxLabel);
+                        Ext.getCmp('answer2').update(str);
+
+                    }
+                } else if (activeId == 'card-2') {
+                    if (direction == -1) {
+                        next.setText("下一题");
+                        wizard.setActiveItem(1);
+                        next.setDisabled(false);
+                    }
+                    else{
+                        Ext.Msg.alert('提示','提交成功');
+                    }
+
+                }
+            };
+            var panel = new Ext.FormPanel({
+                renderTo: document.body,
+                width: 620,
+                height: 500,
+                items: [
+                    {
+                        region: 'west',
+                        id: 'wizard',
+                        width: 600,
+                        height: 480,
+                        title: '垃圾分类问卷调查',
+                        layout: {type:'card',align: 'middle',pack: 'center'},
+                        activeItem: 0,
+                        bodyStyle: 'padding:15px',
+                        defaults: {
+                            border: false
+                        },
+                        bbar: [
+                            {
+                                id: 'move-prev',
+                                text: '上一题',
+                                handler: navHandler.createDelegate(this, [-1]),
+                                disabled: true
+                            }, '->', {
+                                id: 'move-next',
+                                text: '下一题',
+                                handler: navHandler.createDelegate(this, [1])
+                            }
+                        ],
+                        items: [
+                            {
+                                id: 'card-0',
+                                title: '题目1：番茄酱属于以下哪种垃圾?(单选)',
+                                items: answerone
+                            }, {
+                                id: 'card-1',
+                                title: '题目2：王大叔出门遛狗后，哪些是正确处理狗粑粑的方法？(多选)',
+                                items: answertwo,
+                            }, {
+                                id: 'card-2',
+                                html: '<h1>恭喜恭喜，完成了。点击立即提交！</h1>',
+                                items: [
+                                    {
+                                        id: 'answer1',
+                                        title: '题目1：番茄酱属于以下哪种垃圾?(单选)',
+                                        html: ''
+                                    },
+
+                                    {
+                                        id: 'answer2',
+                                        title: '题目2：王大叔出门遛狗后，哪些是正确处理狗粑粑的方法？(多选)',
+                                        html: ''
+                                    },
+
+                                ]
+
+
+                            }
+                        ]
+                    }
+                ]
+            });
+        });
+    </script>
+</head>
+<body>
+
+</body>
+</html>
